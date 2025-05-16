@@ -2,6 +2,12 @@
 
 import { createClient } from '@/lib/supabase.server'
 import { revalidatePath } from 'next/cache'
+import { randomBytes } from 'crypto'
+
+// Generate a secure random token
+function generateToken(): string {
+  return randomBytes(32).toString('hex')
+}
 
 export async function addSubscriber(formData: FormData) {
   const email = formData.get('email') as string
@@ -26,13 +32,16 @@ export async function addSubscriber(formData: FormData) {
       return { error: 'Failed to fetch player data' }
     }
 
+    const unsubscribe_token = generateToken()
+
     const { error } = await supabase
       .from('player-subscribers')
       .upsert(
         {
           email,
           limit,
-          player_id: gamesSince.id
+          player_id: gamesSince.id,
+          unsubscribe_token
         },
         {
           onConflict: 'email,player_id'
