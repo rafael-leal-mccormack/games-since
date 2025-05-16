@@ -1,59 +1,17 @@
 import { createClient } from '@supabase/supabase-js'
 import { sendHomeRunEmail } from './email'
 
-interface PitchingStats {
-  BB: string
-  Balk: string
-  'Wild Pitch': string
-  Flyouts: string
-  decision: string
-  'Inherited Runners': string
-  H: string
-  HR: string
-  ER: string
-  Strikes: string
-  'Inherited Runners Scored': string
-  Groundouts: string
-  R: string
-  pitchingOrder: string
-  ERA: string
-  HBP: string
-  InningsPitched: string
-  'Batters Faced': string
-  SO: string
-  Pitches: string
-}
-
 interface HittingStats {
-  BB: string
   AB: string
-  battingOrder: string
-  IBB: string
   H: string
   HR: string
-  substitutionOrder: string
-  TB: string
-  '3B': string
-  GIDP: string
-  '2B': string
-  R: string
-  SF: string
-  SAC: string
-  HBP: string
   RBI: string
-  SO: string
   AVG: string
 }
 
 interface GameStats {
-  Pitching: PitchingStats
   Hitting: HittingStats
-  startingPosition: string
-  allPositionsPlayed: string
-  started: string
-  teamID: string
   team: string
-  gameID: string
 }
 
 interface PlayerStatsResponse {
@@ -63,23 +21,12 @@ interface PlayerStatsResponse {
   }
 }
 
-interface RecentGame {
-  game_id: string
-  date: string
-  opponent: string
-  ab: number
-  h: number
-  hr: number
-  rbi: number
-  avg: string
-}
-
 const supabase = createClient(
   process.env.SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_KEY!
 )
 
-async function fetchPlayerStats(playerId: string = '660271', numberOfGames: number = 20) {
+async function fetchPlayerStats(playerId: string = '660271', numberOfGames: number = 20): Promise<PlayerStatsResponse['body']> {
   console.log('Fetching player stats...')
   const url = `https://${process.env.RAPID_API_HOST}/getMLBGamesForPlayer?playerID=${playerId}&numberOfGames=${numberOfGames}`
   
@@ -101,24 +48,21 @@ async function fetchPlayerStats(playerId: string = '660271', numberOfGames: numb
 
 async function updateStats() {
   try {
-    const stats = await fetchPlayerStats()
-    const games = Object.entries(stats)
-    let gamesSinceLastHR = 0
-
-    // Get the ID from games-since table
-    const { data: gamesSince, error: idError } = await supabase
+    // Get the ID from games-since table first
+    const { data: gamesSinceRow, error: fetchError } = await supabase
       .from('games-since')
       .select('id')
       .eq('player_id', '660271')
       .single()
 
-    if (idError) {
-      console.error('Error fetching games-since ID:', idError)
-      throw idError
+    if (fetchError) {
+      throw fetchError
     }
 
-    // Count games since last home run and prepare recent games
-    const recentGames: RecentGame[] = games.slice(0, 5).map(([gameId, gameStats]) => {
+    const stats = await fetchPlayerStats()
+    const games = Object.entries(stats)
+
+    const recentGames = games.slice(0, 5).map(([gameId, gameStats]) => {
       const [date, matchup] = gameId.split('_')
       const [away, home] = matchup.split('@')
       const opponent = gameStats.team === 'LAD' ? away : home
@@ -138,52 +82,51 @@ async function updateStats() {
     console.log('Recent games to update:', JSON.stringify(recentGames, null, 2))
 
     // Count games since last home run
+    let gamesSinceLastHR = 0
     for (const [, gameStats] of games) {
-      if (gameStats.Hitting.HR !== '0') {
-        break
-      }
+      if (gameStats.Hitting.HR !== '0') break
       gamesSinceLastHR++
     }
 
-    console.log(`Games since last home run: ${gamesSinceLastHR}`)
+    console.log('Games since last HR:', gamesSinceLastHR)
 
-    // Update games-since table with both games_since and recent_games
-    const { error } = await supabase
+    // Update games_since table
+    const { error: updateError } = await supabase
       .from('games-since')
-      .update({ 
+      .update({
         games_since: gamesSinceLastHR,
-        recent_games: recentGames
+        recent_games: recentGames,
+        last_updated: new Date().toISOString()
       })
-      .eq('id', gamesSince.id)
+      .eq('id', gamesSinceRow.id)
 
-    if (error) {
-      console.error('Error updating database:', error)
-      throw error
+    if (updateError) {
+      throw updateError
     }
 
-    // Get all subscribers for Ohtani who have hit their notification limit
+    console.log('Successfully updated games_since table')
+
+    // Fetch subscribers who need to be notified
     const { data: subscribers, error: subscribersError } = await supabase
       .from('player-subscribers')
       .select('email, limit')
-      .eq('player_id', gamesSince.id)
+      .eq('player_id', gamesSinceRow.id)
       // .lte('limit', gamesSinceLastHR)
 
     if (subscribersError) {
-      console.error('Error fetching subscribers:', subscribersError)
       throw subscribersError
     }
 
-    console.log(`Found ${subscribers.length} subscribers who have hit their notification limit`)
+    console.log(`Found ${subscribers?.length || 0} subscribers to notify (games since HR: ${gamesSinceLastHR})`)
 
-    // Send emails to qualifying subscribers
-    for (const subscriber of subscribers) {
-      const success = await sendHomeRunEmail(subscriber.email, gamesSinceLastHR)
-      if (success) {
-        console.log(`Email sent to ${subscriber.email} (limit: ${subscriber.limit})`)
+    // Send emails to subscribers
+    if (subscribers && subscribers.length > 0) {
+      for (const subscriber of subscribers) {
+        await sendHomeRunEmail(subscriber.email, gamesSinceLastHR)
       }
     }
 
-    console.log('Stats updated and notifications sent successfully')
+    console.log('Successfully completed stats update')
   } catch (error) {
     console.error('Error updating stats:', error)
     process.exit(1)
