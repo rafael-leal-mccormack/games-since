@@ -2,6 +2,36 @@ import { HomeRunCounter } from "@/components/HomeRunCounter"
 import { RecentGames } from "@/components/RecentGames"
 import { NotificationForm } from "@/components/NotificationForm"
 import { getGamesSince, getRecentGames } from "@/lib/supabase/queries"
+import { Metadata } from 'next'
+
+export async function generateMetadata(): Promise<Metadata> {
+  const gamesSince = await getGamesSince()
+  
+  const title = `${gamesSince?.games_since || '0'} Games Since Ohtani's Last HR`
+  const description = "Track how many games it has been since Shohei Ohtani's last home run"
+  
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: 'website',
+      images: [{
+        url: `/api/og?games=${gamesSince?.games_since || '0'}`,
+        width: 1200,
+        height: 630,
+        alt: title
+      }]
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [`/api/og?games=${gamesSince?.games_since || '0'}`],
+    }
+  }
+}
 
 export default async function Home() {
   const [gamesSince, recentGames] = await Promise.all([
