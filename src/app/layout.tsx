@@ -2,6 +2,7 @@ import type React from "react"
 import "./globals.css"
 import type { Metadata } from "next"
 import { Noto_Sans } from "next/font/google"
+import { Analytics } from "@vercel/analytics/next"
 
 const notoSans = Noto_Sans({
   subsets: ["latin"],
@@ -22,7 +23,8 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${notoSans.className} antialiased`}>
-          {children}
+        {children}
+        <Analytics />
       </body>
     </html>
   )

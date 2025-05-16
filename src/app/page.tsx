@@ -50,7 +50,7 @@ export default async function Home() {
             <div className="space-y-3">
               {recentGames.map((game) => (
                 <div 
-                  key={game.id}
+                  key={game.game_id}
                   className="flex items-center justify-between py-2 px-3 rounded-lg bg-slate-600/50"
                 >
                   <div className="flex items-center gap-3">

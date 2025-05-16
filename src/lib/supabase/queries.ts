@@ -1,13 +1,12 @@
 import { createClient } from '../supabase.server'
 import { GamesSince, Game } from './types'
 
-export async function getGamesSince(playerId: string = '660271', stat: string = 'home_run'): Promise<GamesSince | null> {
+export async function getGamesSince(playerId: string = '660271'): Promise<GamesSince | null> {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from('games-since')
     .select('*')
     .eq('player_id', playerId)
-    .eq('stat', stat)
     .order('created_at', { ascending: false })
     .limit(1)
     .single()
@@ -26,7 +25,6 @@ export async function getRecentGames(playerId: string = '660271'): Promise<Game[
     .from('games-since')
     .select('recent_games')
     .eq('player_id', playerId)
-    .eq('stat', 'home_run')
     .order('created_at', { ascending: false })
     .limit(1)
     .single()
