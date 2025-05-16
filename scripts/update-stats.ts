@@ -108,7 +108,7 @@ async function updateStats() {
     // Fetch subscribers who need to be notified
     const { data: subscribers, error: subscribersError } = await supabase
       .from('player-subscribers')
-      .select('email, limit')
+      .select('email, unsubscribe_token, limit')
       .eq('player_id', gamesSinceRow.id)
       // .lte('limit', gamesSinceLastHR)
 
@@ -123,7 +123,7 @@ async function updateStats() {
       console.log('Starting to send emails to subscribers...')
       for (const subscriber of subscribers) {
         try {
-          await sendHomeRunEmail(subscriber.email, gamesSinceLastHR)
+          await sendHomeRunEmail(subscriber, gamesSinceLastHR)
         } catch (error) {
           console.error(`Failed to send email to ${subscriber.email}:`, error)
           // Continue with other subscribers even if one fails
