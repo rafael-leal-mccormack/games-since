@@ -79,7 +79,7 @@ const supabase = createClient(
 )
 
 async function fetchPlayerStats(playerId: string = '660271', numberOfGames: number = 20) {
-  const url = `https://tank01-mlb-live-in-game-real-time-statistics.p.rapidapi.com/getMLBGamesForPlayer?playerID=${playerId}&numberOfGames=${numberOfGames}`
+  const url = `https://${process.env.RAPID_API_HOST}/getMLBGamesForPlayer?playerID=${playerId}&numberOfGames=${numberOfGames}`
   
   const response = await fetch(url, {
     headers: {
