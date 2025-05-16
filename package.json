@@ -10,6 +10,7 @@
     "update-stats": "ts-node scripts/update-stats.ts"
   },
   "dependencies": {
+    "@radix-ui/react-select": "^2.2.4",
     "@radix-ui/react-slot": "^1.2.2",
     "@supabase/ssr": "^0.6.1",
     "@supabase/supabase-js": "^2.49.4",
@@ -20,6 +21,7 @@
     "next": "15.3.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "resend": "^4.5.1",
     "tailwind-merge": "^3.3.0",
     "uuid": "^9.0.1"
   },

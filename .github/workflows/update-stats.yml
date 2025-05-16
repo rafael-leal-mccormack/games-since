@@ -23,4 +23,5 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
           RAPID_API_KEY: ${{ secrets.RAPID_API_KEY }}
-          RAPID_API_HOST: ${{ secrets.RAPID_API_HOST }} 
+          RAPID_API_HOST: ${{ secrets.RAPID_API_HOST }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }} 

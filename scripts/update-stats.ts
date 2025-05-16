@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
+import { sendHomeRunEmail } from './email'
 
 interface PitchingStats {
   BB: string
@@ -148,7 +149,29 @@ async function updateStats() {
       throw error
     }
 
-    console.log('Stats updated successfully')
+    // Get all subscribers for Ohtani who have hit their notification limit
+    const { data: subscribers, error: subscribersError } = await supabase
+      .from('player-subscribers')
+      .select('email, limit')
+      .eq('player_id', '660271')
+      .lte('limit', gamesSinceLastHR)
+
+    if (subscribersError) {
+      console.error('Error fetching subscribers:', subscribersError)
+      throw subscribersError
+    }
+
+    console.log(`Found ${subscribers.length} subscribers who have hit their notification limit`)
+
+    // Send emails to qualifying subscribers
+    for (const subscriber of subscribers) {
+      const success = await sendHomeRunEmail(subscriber.email, gamesSinceLastHR)
+      if (success) {
+        console.log(`Email sent to ${subscriber.email} (limit: ${subscriber.limit})`)
+      }
+    }
+
+    console.log('Stats updated and notifications sent successfully')
   } catch (error) {
     console.error('Error updating stats:', error)
     process.exit(1)
