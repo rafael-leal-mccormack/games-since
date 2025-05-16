@@ -154,7 +154,7 @@ async function updateStats() {
       .from('player-subscribers')
       .select('email, limit')
       .eq('player_id', '660271')
-      .lte('limit', gamesSinceLastHR)
+      // .lte('limit', gamesSinceLastHR)
 
     if (subscribersError) {
       console.error('Error fetching subscribers:', subscribersError)
