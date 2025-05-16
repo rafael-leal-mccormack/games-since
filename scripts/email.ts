@@ -13,7 +13,7 @@ export async function sendHomeRunEmail(subscriber: Subscriber, gamesSince: numbe
   const resend = new Resend(process.env.RESEND_API_KEY)
 
   try {
-    const unsubscribeUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/unsubscribe?token=${subscriber.unsubscribe_token}`
+    const unsubscribeUrl = `https://gamessince.com/api/unsubscribe?token=${subscriber.unsubscribe_token}`
     
     await resend.emails.send({
       from: 'Ohtani Home Run Tracker <notifications@gamessince.com>',
@@ -81,8 +81,8 @@ export async function sendHomeRunEmail(subscriber: Subscriber, gamesSince: numbe
               </div>
               
               <div class="content">
-                <p>Hi there! 👋</p>
-                <div class="games-count">
+              <div class="games-count">
+                  <p>Hi there! 👋</p>
                   ${gamesSince} Games
                 </div>
                 <p style="text-align: center;">since Shohei Ohtani's last home run</p>
