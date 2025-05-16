@@ -142,7 +142,6 @@ async function updateStats() {
         recent_games: recentGames
       })
       .eq('player_id', '660271')
-      .eq('stat', 'home_run')
 
     if (error) {
       console.error('Error updating database:', error)
