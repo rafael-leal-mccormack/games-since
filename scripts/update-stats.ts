@@ -96,7 +96,6 @@ async function updateStats() {
       .update({
         games_since: gamesSinceLastHR,
         recent_games: recentGames,
-        last_updated: new Date().toISOString()
       })
       .eq('id', gamesSinceRow.id)
 
