@@ -65,7 +65,7 @@ async function updateStats() {
     const recentGames = games.slice(0, 5).map(([gameId, gameStats]) => {
       const [date, matchup] = gameId.split('_')
       const [away, home] = matchup.split('@')
-      const opponent = gameStats.team === 'LAD' ? away : home
+      const opponent = away === gameStats.team ? home : away
 
       return {
         game_id: gameId,
