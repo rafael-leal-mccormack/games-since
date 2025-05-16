@@ -105,6 +105,18 @@ async function updateStats() {
     const games = Object.entries(stats)
     let gamesSinceLastHR = 0
 
+    // Get the ID from games-since table
+    const { data: gamesSince, error: idError } = await supabase
+      .from('games-since')
+      .select('id')
+      .eq('player_id', '660271')
+      .single()
+
+    if (idError) {
+      console.error('Error fetching games-since ID:', idError)
+      throw idError
+    }
+
     // Count games since last home run and prepare recent games
     const recentGames: RecentGame[] = games.slice(0, 5).map(([gameId, gameStats]) => {
       const [date, matchup] = gameId.split('_')
@@ -142,7 +154,7 @@ async function updateStats() {
         games_since: gamesSinceLastHR,
         recent_games: recentGames
       })
-      .eq('player_id', '660271')
+      .eq('id', gamesSince.id)
 
     if (error) {
       console.error('Error updating database:', error)
@@ -153,7 +165,7 @@ async function updateStats() {
     const { data: subscribers, error: subscribersError } = await supabase
       .from('player-subscribers')
       .select('email, limit')
-      .eq('player_id', '660271')
+      .eq('player_id', gamesSince.id)
       // .lte('limit', gamesSinceLastHR)
 
     if (subscribersError) {

@@ -29,7 +29,7 @@ export default async function Home() {
       </div>
 
       <footer className="mt-16 text-center text-sm text-slate-400">
-        <p>© {new Date().getFullYear()} Ohtani Tracker</p>
+        <p>© {new Date().getFullYear()} Lit Solutions LLC</p>
         <p className="text-xs mt-1">Not affiliated with MLB or Shohei Ohtani</p>
       </footer>
     </div>

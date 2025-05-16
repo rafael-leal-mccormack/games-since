@@ -66,7 +66,7 @@ export function NotificationFormClient() {
           </p>
         )}
         <p className="text-xs text-slate-400 text-center">
-          We&apos;ll notify you whenever Shohei hits another home run!
+          We&apos;ll notify you whenever Shohei reaches your limit!
         </p>
       </form>
     </div>

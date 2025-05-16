@@ -4,7 +4,7 @@ const resend = new Resend(process.env.RESEND_API_KEY)
 
 export async function sendHomeRunEmail(email: string, gamesSince: number) {
   const { error } = await resend.emails.send({
-    from: 'Ohtani Tracker <tracker@yourdomain.com>',
+    from: 'Ohtani Tracker <Helper@gamessince.com>',
     to: email,
     subject: `Shohei Ohtani: ${gamesSince} Games Since Last Home Run`,
     html: `
