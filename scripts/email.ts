@@ -82,7 +82,7 @@ export async function sendHomeRunEmail(subscriber: Subscriber, gamesSince: numbe
               
               <div class="content">
               <div class="games-count">
-                  <p>Hi there! 👋</p>
+                  <p style="color: black;">Hi there! 👋</p>
                   ${gamesSince} Games
                 </div>
                 <p style="text-align: center;">since Shohei Ohtani's last home run</p>
