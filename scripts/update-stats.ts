@@ -120,8 +120,14 @@ async function updateStats() {
 
     // Send emails to subscribers
     if (subscribers && subscribers.length > 0) {
+      console.log('Starting to send emails to subscribers...')
       for (const subscriber of subscribers) {
-        await sendHomeRunEmail(subscriber.email, gamesSinceLastHR)
+        try {
+          await sendHomeRunEmail(subscriber.email, gamesSinceLastHR)
+        } catch (error) {
+          console.error(`Failed to send email to ${subscriber.email}:`, error)
+          // Continue with other subscribers even if one fails
+        }
       }
     }
 

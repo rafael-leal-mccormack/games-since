@@ -5,10 +5,13 @@ console.log('Resend API Key present:', !!process.env.RESEND_API_KEY)
 console.log('Resend API Key length:', process.env.RESEND_API_KEY?.length)
 
 export async function sendHomeRunEmail(email: string, gamesSince: number) {
+  console.log('Attempting to send email with Resend API key:', !!process.env.RESEND_API_KEY)
+  console.log('API key length:', process.env.RESEND_API_KEY?.length || 0)
+  
   const resend = new Resend(process.env.RESEND_API_KEY)
 
   try {
-    await resend.emails.send({
+    const result = await resend.emails.send({
       from: 'Ohtani Home Run Tracker <updates@ohtani-tracker.com>',
       to: email,
       subject: `Ohtani Home Run Update: ${gamesSince} games since last HR`,
@@ -20,8 +23,10 @@ export async function sendHomeRunEmail(email: string, gamesSince: number) {
         <p>To unsubscribe, visit our website.</p>
       `
     })
+    console.log('Resend API response:', result)
     console.log(`Email sent to ${email}`)
   } catch (error) {
-    console.error(`Failed to send email to ${email}:`, error)
+    console.error('Detailed error sending email:', error)
+    throw error // Let the calling code handle the error
   }
 } 
