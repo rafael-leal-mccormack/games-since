@@ -110,7 +110,7 @@ async function updateStats() {
       .from('player-subscribers')
       .select('email, unsubscribe_token, limit')
       .eq('player_id', gamesSinceRow.id)
-      // .lte('limit', gamesSinceLastHR)
+      .lte('limit', gamesSinceLastHR)
 
     if (subscribersError) {
       throw subscribersError

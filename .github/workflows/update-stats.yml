@@ -2,7 +2,7 @@ name: Update Stats
 
 on:
   schedule:
-    - cron: '0 0 * * *'  # Run at midnight UTC every day
+    - cron: '0 16 * * *'  # Run at 11am EST/EDT (16:00 UTC)
   workflow_dispatch:  # Allow manual trigger
 
 jobs:
