@@ -41,15 +41,12 @@ export function RecentGames({ games }: RecentGamesProps) {
                 <span className="text-slate-400 text-sm">{formatDate(game.date, 'short')}</span>
                 <span className="text-sky-300">vs {game.opponent}</span>
               </div>
-              <div className="flex items-center gap-4 text-sm">
-                <span className="text-slate-300">
-                  {game.ab} AB, {game.h} H
+              <div className="flex items-center gap-6 text-sm">
+                <span className="text-slate-300">{game.ab} AB</span>
+                <span className="text-slate-300">{game.h} H</span>
+                <span className={`font-medium ${game.hr > 0 ? 'text-yellow-400' : 'text-slate-300'}`}>
+                  {game.hr} HR
                 </span>
-                {game.hr > 0 && (
-                  <span className="text-yellow-400 font-medium">
-                    {game.hr} HR
-                  </span>
-                )}
               </div>
             </div>
           ))}
