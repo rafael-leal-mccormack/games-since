@@ -73,10 +73,6 @@ interface RecentGame {
   avg: string
 }
 
-const supabase = await createClient(
-  process.env.SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_KEY!
-)
 
 async function fetchPlayerStats(playerId: string = '660271', numberOfGames: number = 20) {
   const url = `https://${process.env.RAPID_API_HOST}/getMLBGamesForPlayer?playerID=${playerId}&numberOfGames=${numberOfGames}`
@@ -127,6 +123,11 @@ async function updateStats() {
       }
       gamesSinceLastHR++
     }
+    
+    const supabase = await createClient(
+      process.env.SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_KEY!
+    )
 
     // Update games-since table with both games_since and recent_games
     const { error } = await supabase
