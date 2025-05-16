@@ -12,7 +12,7 @@ export async function sendHomeRunEmail(email: string, gamesSince: number) {
 
   try {
     const result = await resend.emails.send({
-      from: 'Ohtani Home Run Tracker <updates@ohtani-tracker.com>',
+      from: 'Ohtani Home Run Tracker <updates@gamessince.com>',
       to: email,
       subject: `Ohtani Home Run Update: ${gamesSince} games since last HR`,
       html: `
