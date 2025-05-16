@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js'
+import { createClient } from "@/lib/supabase.server"
 
 interface PitchingStats {
   BB: string
@@ -73,7 +73,7 @@ interface RecentGame {
   avg: string
 }
 
-const supabase = createClient(
+const supabase = await createClient(
   process.env.SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_KEY!
 )
