@@ -81,6 +81,7 @@ export default async function Home() {
         <div className="w-full max-w-3xl mx-auto flex flex-col items-center gap-12">
           <h1 className="text-4xl md:text-6xl font-bold text-center text-sky-300">Shohei Ohtani</h1>
 
+          <NotificationForm />
           <HomeRunCounter 
             gamesSince={gamesSince.games_since} 
             lastUpdated={gamesSince.recent_games[0].date} 
@@ -88,7 +89,6 @@ export default async function Home() {
 
           <RecentGames games={recentGames} />
 
-          <NotificationForm />
         </div>
 
         <footer className="mt-16 text-center text-sm text-slate-400">
