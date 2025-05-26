@@ -5,6 +5,7 @@ export interface GamesSince {
   stat: string
   player_id: string
   games_since: number
+  recent_games: Game[]
 }
 
 export interface Game {

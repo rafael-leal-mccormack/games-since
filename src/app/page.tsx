@@ -83,7 +83,7 @@ export default async function Home() {
 
           <HomeRunCounter 
             gamesSince={gamesSince.games_since} 
-            lastUpdated={gamesSince.created_at} 
+            lastUpdated={gamesSince.recent_games[0].date} 
           />
 
           <RecentGames games={recentGames} />
