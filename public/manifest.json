@@ -1,0 +1,16 @@
+{
+  "name": "Ohtani HR Tracker",
+  "short_name": "Ohtani HR",
+  "description": "Track games since Shohei Ohtani's last home run",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1e293b",
+  "theme_color": "#1e293b",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64",
+      "type": "image/x-icon"
+    }
+  ]
+} 

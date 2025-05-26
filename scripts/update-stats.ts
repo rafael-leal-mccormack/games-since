@@ -123,7 +123,9 @@ async function updateStats() {
       console.log('Starting to send emails to subscribers...')
       for (const subscriber of subscribers) {
         try {
-          await sendHomeRunEmail(subscriber, gamesSinceLastHR)
+          if (subscriber.limit <= gamesSinceLastHR) {
+            await sendHomeRunEmail(subscriber, gamesSinceLastHR)
+          }
         } catch (error) {
           console.error(`Failed to send email to ${subscriber.email}:`, error)
           // Continue with other subscribers even if one fails

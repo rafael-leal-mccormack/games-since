@@ -35,6 +35,25 @@ export const metadata: Metadata = {
   icons: {
     icon: '/favicon.ico',
   },
+  openGraph: {
+    type: 'website',
+    siteName: 'Ohtani HR Tracker',
+    title: 'Shohei Ohtani HR Tracker',
+    description: "Track games since Shohei Ohtani's last home run. Get real-time updates and notifications for Ohtani's home run statistics with the Los Angeles Dodgers.",
+    url: 'https://gamessince.com',
+    images: [{
+      url: '/homerun-logo.png',
+      width: 1200,
+      height: 630,
+      alt: 'Shohei Ohtani HR Tracker'
+    }]
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Shohei Ohtani HR Tracker',
+    description: "Track games since Shohei Ohtani's last home run. Get real-time updates and notifications for Ohtani's home run statistics with the Los Angeles Dodgers.",
+    images: ['/homerun-logo.png'],
+  }
 }
 
 export default function RootLayout({
@@ -51,6 +70,13 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-status-bar-style" content="black" />
       </head>
       <body className={`${notoSans.className} antialiased`}>
+        <img 
+          src="/homerun-logo.png" 
+          alt="Shohei Ohtani HR Tracker" 
+          className="hidden"
+          width={1200}
+          height={630}
+        />
         {children}
         <Analytics />
       </body>
