@@ -1,6 +1,7 @@
 import { HomeRunCounter } from "@/components/HomeRunCounter"
 import { RecentGames } from "@/components/RecentGames"
 import { NotificationForm } from "@/components/NotificationForm"
+import { FeedbackButton } from "@/components/FeedbackButton"
 import { getGamesSince, getRecentGames } from "@/lib/supabase/queries"
 import { Metadata } from 'next'
 
@@ -95,6 +96,8 @@ export default async function Home() {
           <p>© {new Date().getFullYear()} Lit Solutions LLC</p>
           <p className="text-xs mt-1">Not affiliated with MLB or Shohei Ohtani</p>
         </footer>
+
+        <FeedbackButton />
       </div>
     </>
   )
